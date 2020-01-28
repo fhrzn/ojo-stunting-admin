@@ -8,49 +8,73 @@ use App\DataResponden;
 
 class DataRespondenController extends Controller
 {
-    public function anak(Request $request)
+    public function anak($alamat=null, $tahun=null, $bulan=null)
     {        
-        if ($request==null || $request->input('alamat')=='semua') {
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','3')
-                             ->get();
-        } else{
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','3')
-                             ->where('alamat_responden', 'LIKE' ,'%'.$request->input('alamat').'%')
-                             ->get();
+
+        $query = DataResponden::select('data_respondens.id', 'nama_responden', 'alamat_responden', 'hasil_kuesioner', 'kaders.username', 'data_respondens.created_at as created_at')
+                             ->join('kaders', 'surveyor', '=', 'kaders.id')
+                             ->where('jenis_kuesioner','3');                    
+
+        if ($alamat && $alamat!='semua') {
+            $query = $query->where('alamat_responden', '=' ,$alamat);
+        }        
+        
+        if ($tahun) {
+            $query = $query->whereYear('data_respondens.created_at', '=', $tahun);            
         }
+        
+        if ($bulan && $bulan!='semua') {
+            $query = $query->whereMonth('data_respondens.created_at', '=', $bulan);
+        }        
+                
+        $data = $query->get();                
         
         return view('data-responden.skrininganak')->with('data', $data);
     }
 
-    public function ibuHamil(Request $request)
+    public function ibuHamil($alamat=null, $tahun=null, $bulan=null)
     {
-        if ($request==null || $request->input('alamat')=='semua') {
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','2')
-                             ->get();
-        } else{
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','2')
-                             ->where('alamat_responden', 'LIKE' ,'%'.$request->input('alamat').'%')
-                             ->get();
+        $query = DataResponden::select('data_respondens.id', 'nama_responden', 'alamat_responden', 'hasil_kuesioner', 'kaders.username', 'data_respondens.created_at as created_at')
+                             ->join('kaders', 'surveyor', '=', 'kaders.id')
+                             ->where('jenis_kuesioner','2');                    
+
+        if ($alamat && $alamat!='semua') {
+            $query = $query->where('alamat_responden', '=' ,$alamat);
+        }        
+        
+        if ($tahun) {
+            $query = $query->whereYear('data_respondens.created_at', '=', $tahun);            
         }
+        
+        if ($bulan && $bulan!='semua') {
+            $query = $query->whereMonth('data_respondens.created_at', '=', $bulan);
+        }        
+                
+        $data = $query->get();                
+        
         return view('data-responden.skriningibuhamil')->with('data', $data);
     }
 
-    public function wus(Request $request)
+    public function wus($alamat=null, $tahun=null, $bulan=null)
     {
-        if ($request==null || $request->input('alamat')=='semua') {
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','1')
-                             ->get();
-        } else{
-            $data = DataResponden::join('kaders', 'surveyor', '=', 'kaders.id')
-                             ->where('jenis_kuesioner','1')
-                             ->where('alamat_responden', 'LIKE' ,'%'.$request->input('alamat').'%')
-                             ->get();
+        $query = DataResponden::select('data_respondens.id', 'nama_responden', 'alamat_responden', 'hasil_kuesioner', 'kaders.username', 'data_respondens.created_at as created_at')
+                             ->join('kaders', 'surveyor', '=', 'kaders.id')
+                             ->where('jenis_kuesioner','1');                    
+
+        if ($alamat && $alamat!='semua') {
+            $query = $query->where('alamat_responden', '=' ,$alamat);
+        }        
+        
+        if ($tahun) {
+            $query = $query->whereYear('data_respondens.created_at', '=', $tahun);            
         }
+        
+        if ($bulan && $bulan!='semua') {
+            $query = $query->whereMonth('data_respondens.created_at', '=', $bulan);
+        }        
+                
+        $data = $query->get();                
+        
         return view('data-responden.skriningwus')->with('data', $data);
     }
 
@@ -64,5 +88,17 @@ class DataRespondenController extends Controller
             $data->delete();
             return redirect()->back()->withSuccess('Berhasil dihapus');
         }
+    }
+
+    public function getRiwayat(Request $request)
+    {
+        $data = DataResponden::select('hasil_kuesioner', 'kaders.username as surveyor', 'data_respondens.created_at')
+                            ->join('kaders', 'surveyor', '=', 'kaders.id')
+                            ->where('nama_responden', '=', $request->nama)
+                            ->where('alamat_responden', '=', $request->alamat)
+                            ->get();
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }

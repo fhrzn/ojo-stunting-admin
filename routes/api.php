@@ -19,3 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login', 'ApiController@login2');
 Route::post('/submit-data-skrining', 'ApiController@submitSkrining');
+Route::post('/git-auto-deploy', function(){
+    Artisan::call('git:deploy');
+
+    exit;
+});
