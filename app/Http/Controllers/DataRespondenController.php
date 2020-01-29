@@ -90,12 +90,12 @@ class DataRespondenController extends Controller
         }
     }
 
-    public function getRiwayat(Request $request)
+    public function getRiwayat($nama, $alamat)
     {
         $data = DataResponden::select('hasil_kuesioner', 'kaders.username as surveyor', 'data_respondens.created_at')
                             ->join('kaders', 'surveyor', '=', 'kaders.id')
-                            ->where('nama_responden', '=', $request->nama)
-                            ->where('alamat_responden', '=', $request->alamat)
+                            ->where('nama_responden', '=', $nama)
+                            ->where('alamat_responden', '=', $alamat)
                             ->get();
         return response()->json([
             'data' => $data

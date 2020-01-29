@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/responden/wus', 'DataRespondenController@wus')->name('responden-wus');
     Route::get('/responden/wus/filtered/{alamat?}/{tahun?}/{bulan?}', 'DataRespondenController@wus')->name('responden-wus-filtered');
     Route::delete('/responden/hapus/{id}', 'DataRespondenController@delete')->name('responden.delete');
-    Route::get('/responden/riwayat', 'DataRespondenController@getRiwayat')->name('responden-riwayat');    
+    Route::get('/responden/riwayat/{nama}/{alamat}', 'DataRespondenController@getRiwayat')->name('responden-riwayat');
 
     Route::get('/kader/daftar', 'KaderController@index')->name('kader');
     Route::get('/kader/tambah-kader-baru', 'KaderController@create')->name('kader-baru');

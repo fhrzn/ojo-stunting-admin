@@ -303,19 +303,15 @@
         function getRiwayat(nama, alamat) {
             $('#tbody-riwayat').empty();
             $('#nama-responden').text(nama);
-            console.log(`${nama}, ${alamat}, url: {{url('/responden/riwayat')}}`);
+            console.log(`${nama}, ${alamat}, url: {{url('responden/riwayat/${nama}/${alamat}')}}`);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
             });
-            $.ajax({
-                url: '{{url("responden/riwayat")}}',
-                method: 'GET',
-                data: {
-                    nama: nama,
-                    alamat: alamat
-                },
+            $.ajax({                
+                url: `{{url('responden/riwayat/${nama}/${alamat}')}}`,
+                method: 'GET',                
                 success: (result) => {                    
                     console.log(result.data);
                     result.data.forEach(data => {
